@@ -17,12 +17,17 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{pifont}
+\usepackage{tcolorbox}
+\usepackage{pifont}
 \usepackage{tabularx}
 \newcommand{\cmark}{\ding{51}}
 \newcommand{\xmark}{\ding{55}}
 \sloppy
 \newcommand{\dyz}[1]{\textcolor{red}{[Daniel: #1]}}
 \newcommand{\todo}[1]{\textcolor{blue}{[TODO: #1]}}
+\newcommand{\jeff}[1]{\textcolor{orange}{[Jeff: #1]}}
+\newcommand{\ivan}[1]{\textcolor{blue}{[Ivan: #1]}}
+
 
 \title{SWE-Bench Pro V2: A Cleaner, Harder-to-Game Coding Benchmark}
 \author{Soham Dan, Jeff Da, Sanyam Bhutani, Miguel Romero...TBD, ..., Ying Liu, Daniel Yue Zhang}
@@ -32,12 +37,13 @@
 \input{sections/00_abstract}
 \input{sections/01_intro}
 \input{sections/02_related}
-\input{sections/03_method}
+\input{sections/03_method_v2}
 \input{sections/04_experiments}
 \input{sections/05_discussion}
 \input{sections/06_conclusion}
+\newpage
 \input{sections/07_limitations}
 \bibliography{refs}
 \appendix
-\input{appendix/A_appendix}
+\input{appendix/appendix}
 \end{document}

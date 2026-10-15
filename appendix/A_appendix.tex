@@ -98,21 +98,20 @@ The 272 tasks come from 4 organisations (154 in Go, the rest in Python and JavaS
 \paragraph{Cost.} Mean API spend per task on V2 was \$2.9 for the Claude Code runs, \$2.3 for Astra and \$3 for Gemini.
 \paragraph{Release.} Task directories, the Hard split, the probe, capture and re-grade scripts, the exact harness flags, and per-task grades in both modes for every run.
 
-\section{Harness Study (Preliminary)}
+\section{Harness Study}
 \label{app:harness}
-\todo{Placeholder for the harness comparison of \S\ref{sec:harness}.}
+Setup, attempt rule and the tables behind \S\ref{sec:harness}. We release the 5{,}778 trajectories with the per-trajectory feature files.
 
-\begin{table}[t]
-\centering\small
-\begin{tabular}{lccc}
-\toprule
-Model & mini-swe-agent & Pi & OpenCode \\
-\midrule
-GLM-5.3 & 43 & 44 & 44 \\
-Kimi K3 & 45 & 41 & 45 \\
-Inkling & 29 & 21 & 32 \\
-\bottomrule
-\end{tabular}
-\caption{Hard tasks resolved (of 51) by model and harness under the locked protocol. \todo{Preliminary team runs; confirm before submission.}}
-\label{tab:harness}
-\end{table}
+\subsection{Setup and attempt rule}
+All three models ran at their highest thinking setting (GLM-5.3 with thinking on, Kimi K3 at reasoning effort max, Inkling at xhigh) with a 1M-token context window and no cap on thinking tokens or turns; the only cap besides the 50-minute budget is mini-swe-agent's default 30\,s per-command timeout, which is part of that scaffold. Versions: Harbor 0.22, mini-swe-agent 2.4.6, Pi 0.85.0, OpenCode 1.18.29. Before the runs we patched the task images on which Pi or OpenCode would not install: older Alpine images lacking a recent \texttt{libstdc++}, which Pi's installer needs, and Debian~11 images whose end-of-life package sources broke OpenCode's installer. The patches add system packages only and touch neither the repositories nor the tests, and all nine combinations ran on the same patched images.
+
+Unlike the runs of \S\ref{sec:experiments}, these were graded once, in the container the agent had used, and not re-graded in a fresh container. Every task has one counted attempt per model--scaffold combination; an attempt that hit the budget is graded on the patch present at the deadline. An attempt that hit the budget or was killed by infrastructure \emph{without} a passing grade was run once more at lower concurrency and the re-run is the counted attempt; a re-run never replaced a graded pass, and the rule was applied identically to all nine combinations. Pi and OpenCode place a different Node binary on the agent's path than the grader uses; in 13 trials an agent rebuilt a native module against it and the grader then crashed on that module (Kimi K3: 5 under Pi, 2 under OpenCode; GLM-5.3: 2 and 2; Inkling: 2 under OpenCode), and those trials count as failures. One GLM-5.3 run under Pi was still active past its budget while the grader's tests ran in the same container and killed a grader test process it took to be stale; it changed nothing in response and was graded \textsc{PASSED} by a later grader run. We record it as a boundary case of in-container grading.
+
+\subsection{Outcomes and cost}
+\input{tables/t9_harness_pairs}
+\input{tables/t10_harness_cost}
+Table~\ref{tab:harness-pairs} gives the paired comparisons behind \S\ref{sec:harness}. Splitting the variance of solved-or-failed over the 640 tasks every combination attempted, task identity accounts for 31.7\%, the model for 2.65\%, the scaffold for 0.29\% and the model--scaffold interaction for 0.36\%; the residual 65.0\% is task-by-run variation. Table~\ref{tab:harness-cost} gives the medians behind Figure~\ref{fig:harness}a; wall-clock minutes track endpoint capacity as much as behaviour, so time comparisons belong within a model.
+
+\subsection{Validation and caveats}
+\label{app:harness-validation}
+Pass rates are one attempt per task, a standard error of 0.6--1.4 points per combination. The activity shares of Figure~\ref{fig:harness}b and the verification rates of \S\ref{sec:harness} come from a classifier that reads the first executable of each segment of a shell command; it matched a manual read on 147 of 150 sampled commands and on 97.2\% of sampled wall-clock, and the test-outcome detector behind the red-to-green rates matched on all 32 of 40 sampled test outputs it labelled, leaving 8 undecidable. Step time includes model latency, test-file edits are under-counted under mini-swe-agent, where edits arrive as heredocs, and every V2 task carries the difficulty label ``medium'', so no difficulty split is possible.
