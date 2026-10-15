@@ -34,6 +34,16 @@
 \newcommand{\xmark}{\ding{55}}
 \newcommand{\dyz}[1]{\textcolor{red}{[Daniel: #1]}}
 \newcommand{\todo}[1]{\textcolor{blue}{[TODO: #1]}}
+\newcommand{\jeff}[1]{\textcolor{orange}{[Jeff: #1]}}
+\newcommand{\ivan}[1]{\textcolor{blue}{[Ivan: #1]}}
+
+% Overleaf shares one output.aux between main.tex and main_scale.tex. The ACL review
+% build numbers lines (lineno) and writes \@LN entries to that file, which would make
+% this build fail with "Undefined control sequence \@LN". Ignore those entries here.
+\makeatletter
+\providecommand{\@LN}[2]{}
+\providecommand{\@LN@col}[1]{}
+\makeatother
 
 % The shared tables and figures scale themselves to \columnwidth for the two-column ACL
 % layout. In this one-column layout that would enlarge them, so here \resizebox only
@@ -67,7 +77,7 @@
 \input{sections/00_abstract}
 \input{sections/01_intro}
 \input{sections/02_related}
-\input{sections/03_method}
+\input{sections/03_method_v2}
 \input{sections/04_experiments}
 \input{sections/05_discussion}
 \input{sections/06_conclusion}
@@ -77,6 +87,6 @@
 \bibliography{refs}
 
 \appendix
-\input{appendix/A_appendix}
+\input{appendix/appendix}
 
 \end{document}
