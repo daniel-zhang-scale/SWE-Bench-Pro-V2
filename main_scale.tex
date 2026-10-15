@@ -55,6 +55,18 @@
 \scaleailogopath{assets/scale-logo-horizontal.png}
 \partnerlogopath{assets/reflection-logo.pdf}
 \partnerlogoheight{0.2in}
+% The class bottom-aligns the two logos; centre the shorter Reflection wordmark
+% vertically on the 0.28in Scale logo so both sit on the same line.
+\makeatletter
+\renewcommand{\scaleai@titlelogos}{%
+  \includegraphics[height=0.28in]{\ScaleAILogoPath}%
+  \hspace{1.0em}%
+  {\color{scaleMediumGray}\vrule width 0.35pt height 0.28in depth 0pt}%
+  \hspace{1.0em}%
+  \raisebox{\dimexpr(0.28in-\ScaleAIPartnerLogoHeight)/2\relax}{%
+    \includegraphics[height=\ScaleAIPartnerLogoHeight]{\ScaleAIPartnerLogoPath}}%
+}
+\makeatother
 \contact{\texttt{\{soham.dan, ying.liu, yue.zhang\}@scale.com}}
 
 \title{SWE-Bench Pro V2: A Cleaner, Harder-to-Game Coding Benchmark}
